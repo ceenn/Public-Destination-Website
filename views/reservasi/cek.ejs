@@ -1,0 +1,101 @@
+<%- include('../partials/header', { title: 'Cek Status Reservasi - ' + s.site_name }) %>
+<div style="margin-top:72px;">
+
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <p class="section-label">Pantau Kunjungan Anda</p>
+      <h1 class="page-title">Cek Status Reservasi</h1>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container" style="max-width:640px;">
+
+      <!-- Form cek kode -->
+      <div class="res-card" style="margin-bottom:1.5rem;">
+        <form action="/reservasi/cek" method="GET">
+          <label class="res-label" style="margin-bottom:0.5rem;display:block;">Masukkan Kode Reservasi</label>
+          <div style="display:flex;gap:0.75rem;">
+            <input type="text" name="kode" class="res-input" placeholder="Contoh: BDG240101xxxx"
+              value="<%= code || '' %>" style="flex:1;text-transform:uppercase;margin-bottom:0;">
+            <button type="submit" class="btn-primary" style="white-space:nowrap;padding:10px 20px;">Cek Status</button>
+          </div>
+        </form>
+      </div>
+
+      <% if (error) { %>
+      <div class="res-alert res-alert-error"><%= error %></div>
+      <% } %>
+
+      <% if (reservation) { %>
+      <div class="res-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+          <div>
+            <p style="font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:0.25rem;">Kode Reservasi</p>
+            <p style="font-size:1.4rem;font-weight:800;color:var(--black);letter-spacing:0.05em;"><%= reservation.reservation_code %></p>
+          </div>
+          <%
+            const statusMap = {
+              pending:   { label: 'Menunggu Konfirmasi', cls: 'res-badge-pending' },
+              confirmed: { label: 'Dikonfirmasi',        cls: 'res-badge-confirmed' },
+              cancelled: { label: 'Dibatalkan',          cls: 'res-badge-cancelled' },
+              completed: { label: 'Selesai',             cls: 'res-badge-completed' },
+            };
+            const st = statusMap[reservation.status] || { label: reservation.status, cls: '' };
+          %>
+          <span class="res-badge <%= st.cls %>" style="font-size:0.85rem;padding:6px 16px;"><%= st.label %></span>
+        </div>
+
+        <div class="res-summary">
+          <div class="res-summary-row"><span>Nama</span><span><strong><%= reservation.full_name %></strong></span></div>
+          <div class="res-summary-row"><span>Telepon</span><span><%= reservation.phone %></span></div>
+          <% if (reservation.church_org) { %>
+          <div class="res-summary-row"><span>Gereja / Organisasi</span><span><%= reservation.church_org %></span></div>
+          <% } %>
+          <div class="res-summary-row"><span>Jenis Kunjungan</span><span><%= reservation.type_name || '-' %></span></div>
+          <div class="res-summary-row">
+            <span>Tanggal Kedatangan</span>
+            <span><%= new Date(reservation.check_in).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></span>
+          </div>
+          <% if (reservation.check_out) { %>
+          <div class="res-summary-row">
+            <span>Tanggal Kepulangan</span>
+            <span><%= new Date(reservation.check_out).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></span>
+          </div>
+          <% } %>
+          <div class="res-summary-row"><span>Jumlah Peserta</span><span><%= reservation.group_size %> orang</span></div>
+          <% if (reservation.room_label) { %>
+          <div class="res-summary-row"><span>Kapasitas Ruangan</span><span><%= reservation.room_label %></span></div>
+          <% } %>
+          <div class="res-summary-row">
+            <span>Tanggal Daftar</span>
+            <span><%= new Date(reservation.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></span>
+          </div>
+        </div>
+
+        <% if (reservation.admin_notes) { %>
+        <div style="background:var(--gold-pale);border-radius:var(--radius-sm);padding:1rem;margin-top:1rem;border-left:3px solid var(--gold);">
+          <p style="font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-bottom:0.4rem;">Catatan dari Kami</p>
+          <p style="font-size:0.9rem;color:var(--black);"><%= reservation.admin_notes %></p>
+        </div>
+        <% } %>
+
+        <% if (reservation.status === 'pending') { %>
+        <div class="res-notes" style="margin-top:1rem;">
+          <div class="res-notes-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <p>Tim kami akan menghubungi Anda melalui nomor telepon yang terdaftar untuk konfirmasi reservasi.</p>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <a href="/reservasi" style="color:var(--gold);text-decoration:none;font-size:0.88rem;font-weight:600;">Buat Reservasi Baru</a>
+        <span style="color:var(--gray-light);margin:0 0.75rem;">|</span>
+        <a href="/" style="color:var(--gray);text-decoration:none;font-size:0.88rem;">Kembali ke Beranda</a>
+      </div>
+
+    </div>
+  </section>
+</div>
+<%- include('../partials/footer') %>

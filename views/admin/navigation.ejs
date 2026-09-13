@@ -1,0 +1,69 @@
+<%- include('../partials/admin-header', { pageTitle: 'Menu Navigasi', activePage: 'navigation' }) %>
+
+<div class="add-form">
+  <div class="add-form-title">Tambah Menu Baru</div>
+  <form action="/admin/navigation/add" method="POST">
+    <div class="inline-grid">
+      <input type="text" name="label" placeholder="Label menu (contoh: Donasi)" required>
+      <input type="text" name="url" placeholder="URL (contoh: /donasi atau https://...)" required>
+    </div>
+    <div class="inline-grid">
+      <select name="target">
+        <option value="_self">Buka di tab yang sama</option>
+        <option value="_blank">Buka di tab baru</option>
+      </select>
+      <label class="toggle-switch" style="padding-top:10px;">
+        <input type="checkbox" name="is_button" value="1">
+        <span>Tampilkan sebagai tombol</span>
+      </label>
+    </div>
+    <button type="submit" class="btn-admin">Tambah Menu</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title">Menu Navbar (<%= navLinks.length %>)</div>
+  <p style="font-size:0.8rem;color:var(--gray);margin-bottom:1rem;">Urutan tampil di navbar sesuai urutan di tabel ini.</p>
+  <table class="cms-table">
+    <thead><tr><th>Label</th><th>URL</th><th>Target</th><th>Tombol</th><th>Status</th><th style="width:1%;white-space:nowrap;">Aksi</th></tr></thead>
+    <tbody>
+      <% navLinks.forEach(n => { %>
+      <tr data-id="<%= n.id %>">
+        <form action="/admin/navigation/update/<%= n.id %>" method="POST">
+          <td class="display-mode"><strong><%= n.label %></strong></td>
+          <td class="display-mode" style="font-size:0.78rem;color:var(--gray);word-break:break-all;"><%= n.url %></td>
+          <td class="display-mode"><%= n.target === '_blank' ? 'Tab baru' : 'Tab sama' %></td>
+          <td class="display-mode"><%= n.is_button ? 'Ya' : '—' %></td>
+          <td class="display-mode"><span class="<%= n.is_active?'badge-active':'badge-inactive' %>"><%= n.is_active?'Aktif':'Nonaktif' %></span></td>
+          <td class="edit-mode" style="display:none;"><input type="text" name="label" value="<%= n.label %>" style="margin-bottom:0;"></td>
+          <td class="edit-mode" style="display:none;"><input type="text" name="url" value="<%= n.url %>" style="margin-bottom:0;"></td>
+          <td class="edit-mode" style="display:none;">
+            <select name="target" style="margin-bottom:0;">
+              <option value="_self" <%= n.target==='_self'?'selected':'' %>>Tab sama</option>
+              <option value="_blank" <%= n.target==='_blank'?'selected':'' %>>Tab baru</option>
+            </select>
+          </td>
+          <td class="edit-mode" style="display:none;"><input type="checkbox" name="is_button" value="1" <%= n.is_button?'checked':'' %> style="width:auto;margin-bottom:0;"></td>
+          <td class="edit-mode" style="display:none;"><input type="checkbox" name="is_active" value="1" <%= n.is_active?'checked':'' %> style="width:auto;margin-bottom:0;"> Aktif</td>
+          <td style="white-space:nowrap;">
+            <button type="button" class="btn-admin-outline edit-toggle" data-editing="0" style="padding:5px 10px;font-size:0.74rem;">Edit</button>
+            <button type="submit" class="btn-admin edit-mode" style="display:none;padding:5px 10px;font-size:0.74rem;">Simpan</button>
+          </td>
+        </form>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--gray-light);">
+    <p style="font-size:0.8rem;color:var(--gray);margin-bottom:0.5rem;">Hapus menu:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+      <% navLinks.forEach(n => { %>
+        <form action="/admin/navigation/delete/<%= n.id %>" method="POST">
+          <button type="submit" class="btn-delete" onclick="return confirm('Hapus menu <%= n.label %>?')"><%= n.label %></button>
+        </form>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>

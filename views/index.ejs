@@ -1,0 +1,112 @@
+<%- include('partials/header', { title: (s.site_name||'Bukit Doa Getsemani') + ' - Beranda' }) %>
+
+<section class="hero" id="heroSection" style="margin-top:0;">
+  <div class="carousel-track" id="carouselTrack">
+    <% if (images && images.length > 0) { %>
+      <% images.forEach((img, idx) => { %>
+        <div class="carousel-slide">
+          <img src="/uploads/<%= img.filename %>" alt="<%= img.caption || s.site_name %>" loading="<%= idx===0?'eager':'lazy' %>">
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="carousel-slide">
+        <div class="hero-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/></svg>
+          <p>Upload foto fasilitas via panel admin</p>
+        </div>
+      </div>
+    <% } %>
+  </div>
+  <div class="hero-overlay">
+    <p class="hero-tagline"><%= s.hero_location || s.site_tagline %></p>
+    <h1 class="hero-title"><%- (s.hero_title || s.site_name || '').split('\n').map(l => l.trim()).join('<br>') %></h1>
+    <p class="hero-subtitle"><%= s.hero_subtitle %></p>
+    <p class="hero-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+      <%= s.hero_hint %>
+    </p>
+  </div>
+  <% if (images && images.length > 1) { %>
+  <div class="carousel-controls">
+    <% images.forEach((_, i) => { %><button class="carousel-dot <%= i===0?'active':'' %>"></button><% }) %>
+  </div>
+  <button class="carousel-arrow prev" id="prevSlide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="carousel-arrow next" id="nextSlide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <% } %>
+</section>
+
+<div class="pesan-banner">
+  <p class="pesan-quote"><%= s.pesan_quote %></p>
+  <p class="pesan-source"><%= s.pesan_source %></p>
+</div>
+
+<section class="section sejarah-home">
+  <div class="container">
+    <div class="section-header fade-up"><p class="section-label">Perjalanan Kami</p><h2 class="section-title">Sejarah Bukit Doa</h2></div>
+    <div class="history-carousel fade-up">
+      <% history.forEach(hi => { %>
+      <div class="history-card">
+        <div class="history-year"><%= hi.year_label %></div>
+        <p><%= hi.content %></p>
+      </div>
+      <% }) %>
+    </div>
+    <div style="margin-top:2.5rem;" class="fade-up">
+      <a href="/sejarah" class="btn-outline" style="color:white;border-color:rgba(255,255,255,0.3);">Baca Sejarah Lengkap</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-up"><p class="section-label">Informasi</p><h2>Sekilas Tentang Kami</h2></div>
+    <div class="info-grid">
+      <div class="info-card fade-up">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Jam Operasional</h3>
+        <p>Buka setiap hari<br><strong><%= s.hours_open %> – <%= s.hours_close %> WIB</strong><br><br><%= s.hours_note %></p>
+      </div>
+      <div class="info-card fade-up">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h3>Jadwal Ibadah</h3>
+        <div class="schedule-list">
+          <% schedules.forEach(sch => { %>
+          <div class="schedule-item"><span class="schedule-name"><%= sch.name %> (<%= sch.day_info %>)</span><span class="schedule-time"><%= sch.time_info %></span></div>
+          <% }) %>
+        </div>
+      </div>
+      <div class="info-card fade-up">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <h3>Kunjungan</h3>
+        <ul>
+          <li>Masuk & parkir <strong>gratis</strong></li>
+          <li>Tamu bermalam: reservasi dulu</li>
+          <li>Pinjam ruangan: konfirmasi <%= s.rules_group_notice %></li>
+          <li>Doa di goa: langsung datang</li>
+        </ul>
+        <a href="/tentang" style="display:inline-block;margin-top:1rem;color:var(--gold);font-size:0.82rem;text-decoration:none;font-weight:600;">Selengkapnya →</a>
+          <a href="/reservasi" style="display:inline-block;margin-top:0.5rem;color:var(--black);font-size:0.82rem;text-decoration:none;font-weight:700;background:var(--gold-pale);padding:6px 14px;border-radius:100px;">Buat Reservasi →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section maps-section">
+  <div class="container">
+    <div class="maps-wrapper">
+      <div class="maps-embed fade-up" id="mapsEmbed">
+        <iframe src="<%= s.contact_maps_embed %>" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokasi"></iframe>
+      </div>
+      <div class="maps-info fade-up">
+        <div class="section-header" style="margin-bottom:1.5rem;"><p class="section-label">Lokasi</p><h2>Temukan Kami</h2></div>
+        <div class="address-block"><p style="white-space:pre-line;"><strong><%= s.site_name %></strong><br><%= s.contact_address %></p></div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="/akses" class="btn-primary">Petunjuk Arah</a>
+          <a href="<%= s.contact_maps_link %>" target="_blank" rel="noopener" class="btn-outline">Google Maps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

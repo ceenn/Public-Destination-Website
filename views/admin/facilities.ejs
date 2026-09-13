@@ -1,0 +1,43 @@
+<%- include('../partials/admin-header', { pageTitle: 'Fasilitas', activePage: 'facilities' }) %>
+
+<div class="add-form">
+  <div class="add-form-title">Tambah Fasilitas Baru</div>
+  <form action="/admin/facilities/add" method="POST">
+    <input type="text" name="title" placeholder="Nama fasilitas" required>
+    <textarea name="description" placeholder="Deskripsi singkat fasilitas..." rows="2" required></textarea>
+    <button type="submit" class="btn-admin">Tambah Fasilitas</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title">Daftar Fasilitas (<%= facilities.length %>)</div>
+  <% facilities.forEach(fac => { %>
+  <div data-id="<%= fac.id %>" style="border:1px solid var(--gray-light);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:0.75rem;">
+    <form action="/admin/facilities/update/<%= fac.id %>" method="POST">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div style="flex:1;">
+          <div class="display-mode">
+            <strong style="font-size:0.95rem;"><%= fac.title %></strong>
+            <span class="<%= fac.is_active ? 'badge-active' : 'badge-inactive' %>" style="margin-left:8px;"><%= fac.is_active ? 'Aktif' : 'Nonaktif' %></span>
+            <p style="font-size:0.85rem;color:var(--gray);margin-top:0.4rem;"><%= fac.description %></p>
+          </div>
+          <div class="edit-mode" style="display:none;">
+            <input type="text" name="title" value="<%= fac.title %>" style="margin-bottom:0.5rem;">
+            <textarea name="description" rows="2" style="margin-bottom:0.5rem;"><%= fac.description %></textarea>
+            <label class="toggle-switch"><input type="checkbox" name="is_active" value="1" <%= fac.is_active?'checked':'' %>><span>Aktif (tampil di website)</span></label>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+          <button type="button" class="btn-admin-outline edit-toggle" data-editing="0" style="padding:5px 12px;font-size:0.76rem;">Edit</button>
+          <button type="submit" class="btn-admin edit-mode" style="display:none;padding:5px 12px;font-size:0.76rem;">Simpan</button>
+        </div>
+      </div>
+    </form>
+    <form action="/admin/facilities/delete/<%= fac.id %>" method="POST" style="margin-top:0.5rem;">
+      <button type="submit" class="btn-delete" onclick="return confirm('Hapus fasilitas <%= fac.title %>?')">Hapus</button>
+    </form>
+  </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/admin-footer') %>

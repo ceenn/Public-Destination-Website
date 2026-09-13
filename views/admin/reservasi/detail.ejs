@@ -1,0 +1,129 @@
+<%- include('../../partials/admin-header', { pageTitle: 'Detail Reservasi', activePage: 'reservasi' }) %>
+
+<%
+  const statusMap = {
+    pending:   { label:'Menunggu Konfirmasi', cls:'res-badge-pending'   },
+    confirmed: { label:'Dikonfirmasi',        cls:'res-badge-confirmed' },
+    cancelled: { label:'Dibatalkan',          cls:'res-badge-cancelled' },
+    completed: { label:'Selesai',             cls:'res-badge-completed' },
+  };
+  const st = statusMap[rv.status] || { label: rv.status, cls:'' };
+%>
+
+<div style="margin-bottom:1rem;">
+  <a href="/admin/reservasi" class="btn-admin-outline" style="font-size:0.82rem;padding:7px 14px;">← Kembali ke Daftar</a>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;">
+
+  <!-- Detail kiri -->
+  <div>
+    <div class="cms-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:0.3rem;">Kode Reservasi</p>
+          <p style="font-size:1.6rem;font-weight:800;letter-spacing:0.06em;color:var(--black);"><%= rv.reservation_code %></p>
+        </div>
+        <span class="res-badge <%= st.cls %>" style="font-size:0.88rem;padding:8px 18px;"><%= st.label %></span>
+      </div>
+
+      <div class="settings-group-title" style="margin-top:0;">Data Tamu</div>
+      <div class="res-summary" style="margin-bottom:1.5rem;">
+        <div class="res-summary-row"><span>Nama Lengkap</span><span><strong><%= rv.full_name %></strong></span></div>
+        <div class="res-summary-row"><span>Telepon / WhatsApp</span>
+          <span><a href="https://wa.me/<%= rv.phone.replace(/\D/g,'') %>" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;font-weight:600;"><%= rv.phone %></a></span>
+        </div>
+        <% if (rv.email) { %><div class="res-summary-row"><span>Email</span><span><%= rv.email %></span></div><% } %>
+        <% if (rv.church_org) { %><div class="res-summary-row"><span>Gereja / Organisasi</span><span><%= rv.church_org %></span></div><% } %>
+      </div>
+
+      <div class="settings-group-title">Detail Kunjungan</div>
+      <div class="res-summary" style="margin-bottom:1.5rem;">
+        <div class="res-summary-row"><span>Jenis Kunjungan</span><span><%= rv.type_name || '-' %></span></div>
+        <div class="res-summary-row"><span>Jumlah Peserta</span><span><%= rv.group_size %> orang</span></div>
+        <% if (rv.room_label) { %><div class="res-summary-row"><span>Kapasitas Ruangan</span><span><%= rv.room_label %></span></div><% } %>
+        <div class="res-summary-row">
+          <span>Tanggal Kedatangan</span>
+          <span><strong><%= new Date(rv.check_in).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></strong></span>
+        </div>
+        <% if (rv.check_out) { %>
+        <div class="res-summary-row">
+          <span>Tanggal Kepulangan</span>
+          <span><strong><%= new Date(rv.check_out).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></strong></span>
+        </div>
+        <%
+          const diffMs = new Date(rv.check_out) - new Date(rv.check_in);
+          const diffDays = Math.ceil(diffMs / (1000*60*60*24));
+        %>
+        <div class="res-summary-row"><span>Durasi</span><span><%= diffDays %> hari</span></div>
+        <% } %>
+      </div>
+
+      <% if (rv.purpose) { %>
+      <div class="settings-group-title">Tujuan Kunjungan</div>
+      <p style="font-size:0.9rem;color:var(--gray);line-height:1.8;margin-bottom:1.5rem;"><%= rv.purpose %></p>
+      <% } %>
+
+      <% if (rv.special_request) { %>
+      <div class="settings-group-title">Permintaan Khusus</div>
+      <p style="font-size:0.9rem;color:var(--gray);line-height:1.8;margin-bottom:1.5rem;"><%= rv.special_request %></p>
+      <% } %>
+
+      <div class="settings-group-title">Waktu Pendaftaran</div>
+      <p style="font-size:0.88rem;color:var(--gray);">
+        <%= new Date(rv.created_at).toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}) %>
+        pukul <%= new Date(rv.created_at).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) %> WIB
+      </p>
+    </div>
+  </div>
+
+  <!-- Aksi kanan -->
+  <div>
+    <!-- Update status -->
+    <div class="cms-card">
+      <div class="cms-card-title">Perbarui Status</div>
+      <form action="/admin/reservasi/<%= rv.id %>/status" method="POST">
+        <label class="form-label">Status Reservasi</label>
+        <select name="status" style="margin-bottom:1rem;">
+          <option value="pending"   <%= rv.status==='pending'   ?'selected':'' %>>Menunggu Konfirmasi</option>
+          <option value="confirmed" <%= rv.status==='confirmed' ?'selected':'' %>>Dikonfirmasi</option>
+          <option value="cancelled" <%= rv.status==='cancelled' ?'selected':'' %>>Dibatalkan</option>
+          <option value="completed" <%= rv.status==='completed' ?'selected':'' %>>Selesai</option>
+        </select>
+        <label class="form-label">Catatan untuk Tamu</label>
+        <textarea name="admin_notes" rows="3" placeholder="Catatan ini akan ditampilkan ke tamu saat cek status..." style="margin-bottom:1rem;"><%= rv.admin_notes || '' %></textarea>
+        <button type="submit" class="btn-admin" style="width:100%;padding:11px;">Simpan Perubahan</button>
+      </form>
+    </div>
+
+    <!-- Kontak cepat -->
+    <div class="cms-card">
+      <div class="cms-card-title">Kontak Tamu</div>
+      <a href="https://wa.me/<%= rv.phone.replace(/\D/g,'') %>?text=Halo%20<%= encodeURIComponent(rv.full_name) %>%2C%20kami%20dari%20Bukit%20Doa%20Getsemani%20menghubungi%20terkait%20reservasi%20Anda%20dengan%20kode%20<%= rv.reservation_code %>."
+         target="_blank" rel="noopener"
+         class="btn-primary" style="display:flex;width:100%;justify-content:center;padding:10px;margin-bottom:0.75rem;font-size:0.85rem;">
+        Hubungi via WhatsApp
+      </a>
+      <% if (rv.email) { %>
+      <a href="mailto:<%= rv.email %>?subject=Konfirmasi Reservasi <%= rv.reservation_code %>"
+         class="btn-admin-outline" style="display:flex;width:100%;justify-content:center;padding:10px;font-size:0.85rem;text-decoration:none;">
+        Kirim Email
+      </a>
+      <% } %>
+    </div>
+
+    <!-- Hapus -->
+    <div class="cms-card" style="border-color:#fee2e2;">
+      <div class="cms-card-title" style="color:#991b1b;">Zona Berbahaya</div>
+      <p style="font-size:0.82rem;color:var(--gray);margin-bottom:0.875rem;">Menghapus reservasi ini bersifat permanen dan tidak dapat dibatalkan.</p>
+      <form action="/admin/reservasi/<%= rv.id %>/delete" method="POST">
+        <button type="submit" class="btn-delete" style="width:100%;padding:10px;" onclick="return confirm('Hapus reservasi <%= rv.reservation_code %>? Tindakan ini tidak dapat dibatalkan.')">
+          Hapus Reservasi Ini
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<%- include('../../partials/admin-footer') %>

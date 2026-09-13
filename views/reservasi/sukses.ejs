@@ -1,0 +1,70 @@
+<%- include('../partials/header', { title: 'Reservasi Berhasil - ' + s.site_name }) %>
+<div style="margin-top:72px;">
+
+  <section class="section" style="min-height:80vh;display:flex;align-items:center;">
+    <div class="container">
+      <div style="max-width:560px;margin:0 auto;text-align:center;">
+
+        <div class="res-success-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+
+        <h1 style="font-size:2rem;font-weight:800;margin-bottom:0.75rem;">Permohonan Terkirim</h1>
+        <p style="color:var(--gray);font-size:1rem;line-height:1.8;margin-bottom:2rem;">
+          Terima kasih, <strong><%= full_name %></strong>. Permohonan reservasi Anda telah kami terima. Tim kami akan menghubungi Anda untuk konfirmasi.
+        </p>
+
+        <!-- Kode Reservasi -->
+        <div class="res-code-box">
+          <p style="font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);margin-bottom:0.5rem;">Kode Reservasi Anda</p>
+          <div class="res-code-number" id="resCode"><%= code %></div>
+          <button onclick="copyCode()" class="res-copy-btn" id="copyBtn">Salin Kode</button>
+          <p style="font-size:0.78rem;color:var(--gray);margin-top:0.75rem;">Simpan kode ini untuk mengecek status reservasi Anda.</p>
+        </div>
+
+        <!-- Detail ringkas -->
+        <div class="res-summary">
+          <div class="res-summary-row">
+            <span>Jenis Kunjungan</span>
+            <span><%= resType ? resType.name : '-' %></span>
+          </div>
+          <div class="res-summary-row">
+            <span>Tanggal Kedatangan</span>
+            <span><%= new Date(check_in).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></span>
+          </div>
+          <% if (check_out) { %>
+          <div class="res-summary-row">
+            <span>Tanggal Kepulangan</span>
+            <span><%= new Date(check_out).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}) %></span>
+          </div>
+          <% } %>
+          <div class="res-summary-row">
+            <span>Status</span>
+            <span class="res-badge res-badge-pending">Menunggu Konfirmasi</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
+          <a href="/reservasi/cek?kode=<%= code %>" class="btn-primary">Cek Status Reservasi</a>
+          <a href="/" class="btn-outline">Kembali ke Beranda</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function copyCode() {
+  navigator.clipboard.writeText('<%= code %>').then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Tersalin!';
+    btn.style.background = 'var(--black)';
+    setTimeout(() => { btn.textContent = 'Salin Kode'; btn.style.background = ''; }, 2000);
+  });
+}
+</script>
+
+<%- include('../partials/footer') %>

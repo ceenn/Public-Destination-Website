@@ -1,0 +1,88 @@
+<%- include('partials/header', { title: 'Tentang Kami - ' + s.site_name }) %>
+<div style="margin-top:72px;">
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <p class="section-label">Profil</p>
+      <h1 class="page-title"><%= s.about_title %></h1>
+    </div>
+  </div>
+
+  <section class="section" style="padding-bottom:2rem;">
+    <div class="container">
+      <div class="section-header fade-up"><p class="section-label">Informasi Dasar</p><h2>Informasi Penting</h2></div>
+      <div class="info-grid">
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h3>Jam Operasional</h3>
+          <p>Buka <strong>setiap hari</strong><br>Pukul <strong><%= s.hours_open %> – <%= s.hours_close %> WIB</strong><br><br><%= s.hours_note %></p>
+        </div>
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <h3>Kontak</h3>
+          <p>WhatsApp: <strong>+<%= s.contact_whatsapp %></strong></p>
+          <a href="https://wa.me/<%= s.contact_whatsapp %>" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;color:var(--gold);font-size:0.85rem;text-decoration:none;font-weight:600;">Hubungi via WhatsApp →</a>
+        </div>
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2H3v16h5l3 3 3-3h7z"/></svg></div>
+          <h3>Media Sosial</h3>
+          <ul>
+            <li><a href="https://www.instagram.com/<%= s.contact_instagram %>" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">Instagram: @<%= s.contact_instagram %></a></li>
+            <li><a href="<%= s.contact_youtube %>" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">YouTube: <%= s.site_name %></a></li>
+          </ul>
+        </div>
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <h3>Pesan Utama</h3>
+          <blockquote style="font-size:1.1rem;font-weight:700;font-style:italic;color:var(--black);border-left:3px solid var(--gold);padding-left:0.75rem;margin:0.5rem 0;"><%= s.pesan_quote %></blockquote>
+          <p style="font-size:0.8rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.5rem;font-weight:600;"><%= s.pesan_source %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="jadwal" style="background:var(--black);padding-top:4rem;padding-bottom:4rem;">
+    <div class="container">
+      <div class="section-header fade-up"><p class="section-label" style="color:var(--gold-light);">Kegiatan Rutin</p><h2 style="color:white;">Jadwal Ibadah</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;" class="fade-up">
+        <% schedules.forEach(sch => { %>
+        <div style="background:var(--glass-bg);backdrop-filter:blur(12px);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius);padding:1.75rem;">
+          <div style="font-size:0.68rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;font-weight:600;"><%= sch.day_info %></div>
+          <h3 style="color:white;font-size:1.15rem;margin-bottom:0.5rem;font-weight:700;"><%= sch.name %></h3>
+          <div style="font-size:1.4rem;font-weight:800;color:var(--gold);"><%= sch.time_info %></div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="aturan">
+    <div class="container">
+      <div class="section-header fade-up"><p class="section-label">Peraturan</p><h2>Aturan Berkunjung</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+          <h3>Tamu Bermalam</h3>
+          <ul>
+            <li>Minimal <strong><%= s.rules_overnight_min %></strong>, maksimal <strong><%= s.rules_overnight_max %></strong></li>
+            <li><%= s.rules_overnight_note %></li>
+          </ul>
+        </div>
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <h3>Prosedur Kunjungan</h3>
+          <ul>
+            <li>Rombongan bermalam: reservasi terlebih dahulu</li>
+            <li>Pinjam ruangan: konfirmasi <strong><%= s.rules_group_notice %></strong></li>
+            <li>Kunjungan & doa di goa: langsung datang</li>
+          </ul>
+        </div>
+        <div class="info-card fade-up" id="donasi">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <h3>Biaya & Donasi</h3>
+          <p><%= s.rules_donation %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer') %>

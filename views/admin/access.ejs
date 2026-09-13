@@ -1,0 +1,43 @@
+<%- include('../partials/admin-header', { pageTitle: 'Info Akses & Lokasi', activePage: 'access' }) %>
+
+<div class="add-form">
+  <div class="add-form-title">Tambah Info Transportasi</div>
+  <form action="/admin/access/add" method="POST">
+    <input type="text" name="transport_type" placeholder="Jenis transportasi (contoh: Ojek Online)" required>
+    <textarea name="description" placeholder="Deskripsi cara akses..." rows="2" required></textarea>
+    <button type="submit" class="btn-admin">Tambah</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title">Info Akses (<%= access.length %>)</div>
+  <% access.forEach(a => { %>
+  <div data-id="<%= a.id %>" style="border:1px solid var(--gray-light);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:0.75rem;">
+    <form action="/admin/access/update/<%= a.id %>" method="POST">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div style="flex:1;">
+          <div class="display-mode">
+            <strong style="font-size:0.95rem;"><%= a.transport_type %></strong>
+            <span class="<%= a.is_active ? 'badge-active' : 'badge-inactive' %>" style="margin-left:8px;"><%= a.is_active ? 'Aktif' : 'Nonaktif' %></span>
+            <p style="font-size:0.85rem;color:var(--gray);margin-top:0.4rem;"><%= a.description %></p>
+          </div>
+          <div class="edit-mode" style="display:none;">
+            <input type="text" name="transport_type" value="<%= a.transport_type %>" style="margin-bottom:0.5rem;">
+            <textarea name="description" rows="2" style="margin-bottom:0.5rem;"><%= a.description %></textarea>
+            <label class="toggle-switch"><input type="checkbox" name="is_active" value="1" <%= a.is_active?'checked':'' %>><span>Aktif</span></label>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+          <button type="button" class="btn-admin-outline edit-toggle" data-editing="0" style="padding:5px 12px;font-size:0.76rem;">Edit</button>
+          <button type="submit" class="btn-admin edit-mode" style="display:none;padding:5px 12px;font-size:0.76rem;">Simpan</button>
+        </div>
+      </div>
+    </form>
+    <form action="/admin/access/delete/<%= a.id %>" method="POST" style="margin-top:0.5rem;">
+      <button type="submit" class="btn-delete" onclick="return confirm('Hapus info <%= a.transport_type %>?')">Hapus</button>
+    </form>
+  </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,226 @@
+<%- include('../partials/header', { title: 'Reservasi - ' + s.site_name }) %>
+<div style="margin-top:72px;">
+
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <p class="section-label">Rencanakan Kunjungan Anda</p>
+      <h1 class="page-title">Formulir Reservasi</h1>
+    </div>
+  </div>
+
+  <section class="section" style="padding-top:3rem;">
+    <div class="container">
+      <div class="reservasi-layout">
+
+        <!-- FORM -->
+        <div class="reservasi-form-wrap">
+
+          <% if (error) { %>
+          <div class="res-alert res-alert-error"><%= error %></div>
+          <% } %>
+
+          <form action="/reservasi/submit" method="POST" id="resForm">
+
+            <!-- STEP 1: Pilih jenis kunjungan -->
+            <div class="res-card">
+              <div class="res-card-title">
+                <span class="res-step">1</span>
+                Pilih Jenis Kunjungan
+              </div>
+              <div class="res-type-grid">
+                <% types.forEach(t => { %>
+                <label class="res-type-card <%= selectedType == t.id ? 'selected' : '' %>">
+                  <input type="radio" name="type_id" value="<%= t.id %>"
+                    <%= selectedType == t.id ? 'checked' : '' %>
+                    required onchange="onTypeChange(this)">
+                  <div class="res-type-inner">
+                    <span class="res-type-name"><%= t.name %></span>
+                    <span class="res-type-desc"><%= t.description %></span>
+                    <span class="res-type-price"><%= t.price_info %></span>
+                  </div>
+                </label>
+                <% }) %>
+              </div>
+            </div>
+
+            <!-- STEP 2: Data diri -->
+            <div class="res-card">
+              <div class="res-card-title">
+                <span class="res-step">2</span>
+                Data Diri
+              </div>
+              <div class="res-form-grid">
+                <div class="res-field">
+                  <label class="res-label">Nama Lengkap <span class="req">*</span></label>
+                  <input type="text" name="full_name" class="res-input" placeholder="Nama sesuai KTP" required>
+                </div>
+                <div class="res-field">
+                  <label class="res-label">Nomor Telepon / WhatsApp <span class="req">*</span></label>
+                  <input type="tel" name="phone" class="res-input" placeholder="Contoh: 0812-3456-7890" required>
+                </div>
+                <div class="res-field">
+                  <label class="res-label">Email <span style="color:var(--gray);font-weight:400;">(opsional)</span></label>
+                  <input type="email" name="email" class="res-input" placeholder="email@contoh.com">
+                </div>
+                <div class="res-field">
+                  <label class="res-label">Gereja / Persekutuan / Organisasi</label>
+                  <input type="text" name="church_org" class="res-input" placeholder="Nama gereja atau persekutuan">
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Detail kunjungan -->
+            <div class="res-card">
+              <div class="res-card-title">
+                <span class="res-step">3</span>
+                Detail Kunjungan
+              </div>
+              <div class="res-form-grid">
+                <div class="res-field">
+                  <label class="res-label">Jumlah Peserta <span class="req">*</span></label>
+                  <input type="number" name="group_size" class="res-input" placeholder="Jumlah orang" min="1" value="1" required>
+                </div>
+
+                <!-- Kapasitas ruangan (hanya untuk pinjam ruangan) -->
+                <div class="res-field" id="fieldRoomCap" style="display:none;">
+                  <label class="res-label">Kapasitas Ruangan yang Dibutuhkan</label>
+                  <select name="room_capacity_id" class="res-input">
+                    <option value="">Pilih kapasitas...</option>
+                    <% caps.forEach(c => { %>
+                    <option value="<%= c.id %>"><%= c.label %></option>
+                    <% }) %>
+                  </select>
+                </div>
+
+                <div class="res-field">
+                  <label class="res-label">Tanggal Kedatangan <span class="req">*</span></label>
+                  <input type="date" name="check_in" class="res-input" required
+                    min="<%= new Date().toISOString().split('T')[0] %>">
+                </div>
+
+                <!-- Tanggal kepulangan (opsional sesuai jenis) -->
+                <div class="res-field" id="fieldCheckOut">
+                  <label class="res-label" id="labelCheckOut">Tanggal Kepulangan</label>
+                  <input type="date" name="check_out" class="res-input" id="inputCheckOut"
+                    min="<%= new Date().toISOString().split('T')[0] %>">
+                </div>
+
+                <div class="res-field res-field-full">
+                  <label class="res-label">Tujuan / Maksud Kunjungan</label>
+                  <textarea name="purpose" class="res-input" rows="3" placeholder="Ceritakan tujuan kunjungan Anda..."></textarea>
+                </div>
+
+                <div class="res-field res-field-full">
+                  <label class="res-label">Permintaan Khusus</label>
+                  <textarea name="special_request" class="res-input" rows="2" placeholder="Ada kebutuhan khusus? Tuliskan di sini..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Catatan -->
+            <div class="res-notes">
+              <div class="res-notes-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div>
+                <p>Setelah mengirim formulir ini, tim kami akan menghubungi Anda melalui nomor telepon yang tercantum untuk konfirmasi. Simpan kode reservasi Anda sebagai bukti pendaftaran.</p>
+                <p style="margin-top:0.4rem;">Tidak ada biaya masuk atau parkir. Persembahan bersifat sukarela.</p>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:16px;font-size:1rem;border-radius:var(--radius-sm);">
+              Kirim Permohonan Reservasi
+            </button>
+          </form>
+        </div>
+
+        <!-- SIDEBAR INFO -->
+        <aside class="reservasi-sidebar">
+          <div class="res-sidebar-card">
+            <h3>Cek Status Reservasi</h3>
+            <p>Sudah pernah mengisi formulir? Cek status reservasi Anda dengan kode yang diterima.</p>
+            <form action="/reservasi/cek" method="GET">
+              <input type="text" name="kode" class="res-input" placeholder="Contoh: BDG240101xxxx" style="margin-bottom:0.75rem;text-transform:uppercase;">
+              <button type="submit" class="btn-outline" style="width:100%;justify-content:center;">Cek Status</button>
+            </form>
+          </div>
+
+          <div class="res-sidebar-card">
+            <h3>Jam Operasional</h3>
+            <p><strong><%= s.hours_open %> – <%= s.hours_close %> WIB</strong><br><%= s.hours_note %></p>
+          </div>
+
+          <div class="res-sidebar-card">
+            <h3>Butuh Bantuan?</h3>
+            <p>Hubungi kami langsung melalui WhatsApp untuk informasi lebih lanjut.</p>
+            <a href="https://wa.me/<%= s.contact_whatsapp %>" target="_blank" rel="noopener" class="btn-primary" style="width:100%;justify-content:center;margin-top:0.75rem;">
+              Hubungi via WhatsApp
+            </a>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// Data jenis reservasi
+const typeData = {
+  <% types.forEach(t => { %>
+  '<%= t.id %>': {
+    requiresId: <%= t.requires_id ? 'true' : 'false' %>,
+    maxDays: <%= t.max_days || 'null' %>,
+    minDays: <%= t.min_days || 1 %>,
+    needsCheckOut: <%= ['1','2','4'].includes(String(t.id)) ? 'true' : 'false'  %>,
+    needsRoom: false
+  },
+  <% }) %>
+};
+
+// Mark pinjam ruangan (type index 2 = id ke-2 di DB biasanya)
+<% types.forEach(t => { %>
+<% if (t.name.toLowerCase().includes('ruangan')) { %>
+typeData['<%= t.id %>'].needsRoom = true;
+typeData['<%= t.id %>'].needsCheckOut = false;
+<% } %>
+<% }) %>
+
+function onTypeChange(radio) {
+  document.querySelectorAll('.res-type-card').forEach(c => c.classList.remove('selected'));
+  radio.closest('.res-type-card').classList.add('selected');
+  const info = typeData[radio.value] || {};
+  // Tampilkan kapasitas ruangan jika perlu
+  document.getElementById('fieldRoomCap').style.display = info.needsRoom ? '' : 'none';
+  // Tampilkan check_out jika menginap
+  const coField = document.getElementById('fieldCheckOut');
+  const coInput = document.getElementById('inputCheckOut');
+  if (info.needsCheckOut === false && !info.needsRoom) {
+    coField.style.display = 'none'; coInput.required = false; coInput.value = '';
+  } else {
+    coField.style.display = ''; 
+  }
+  // Update label
+  const lbl = document.getElementById('labelCheckOut');
+  if (lbl) lbl.textContent = info.needsRoom ? 'Tanggal Kegiatan Selesai' : 'Tanggal Kepulangan';
+}
+
+// Trigger on load if type already selected
+document.addEventListener('DOMContentLoaded', () => {
+  const checked = document.querySelector('input[name="type_id"]:checked');
+  if (checked) onTypeChange(checked);
+
+  // Validasi check_out >= check_in + min hari
+  const cin  = document.querySelector('input[name="check_in"]');
+  const cout = document.getElementById('inputCheckOut');
+  if (cin && cout) {
+    cin.addEventListener('change', () => {
+      if (cout.value && cout.value <= cin.value) cout.value = '';
+      cout.min = cin.value;
+    });
+  }
+});
+</script>
+
+<%- include('../partials/footer') %>

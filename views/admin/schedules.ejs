@@ -1,0 +1,57 @@
+<%- include('../partials/admin-header', { pageTitle: 'Jadwal Ibadah', activePage: 'schedules' }) %>
+
+<div class="add-form">
+  <div class="add-form-title">Tambah Jadwal Baru</div>
+  <form action="/admin/schedules/add" method="POST">
+    <div class="inline-grid">
+      <input type="text" name="name" placeholder="Nama kegiatan (contoh: Doa Puasa)" required>
+      <input type="text" name="day_info" placeholder="Hari (contoh: Setiap Rabu)" required>
+    </div>
+    <input type="text" name="time_info" placeholder="Jam (contoh: Pk. 19.00)" required>
+    <button type="submit" class="btn-admin">Tambah Jadwal</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title">Daftar Jadwal (<%= schedules.length %>)</div>
+  <table class="cms-table">
+    <thead><tr><th>Nama</th><th>Hari</th><th>Jam</th><th>Status</th><th style="width:1%;white-space:nowrap;">Aksi</th></tr></thead>
+    <tbody>
+      <% schedules.forEach(sch => { %>
+      <tr data-id="<%= sch.id %>">
+        <form action="/admin/schedules/update/<%= sch.id %>" method="POST">
+          <td class="display-mode"><strong><%= sch.name %></strong></td>
+          <td class="display-mode"><%= sch.day_info %></td>
+          <td class="display-mode"><%= sch.time_info %></td>
+          <td class="edit-mode" style="display:none;"><input type="text" name="name" value="<%= sch.name %>" style="margin-bottom:0;"></td>
+          <td class="edit-mode" style="display:none;"><input type="text" name="day_info" value="<%= sch.day_info %>" style="margin-bottom:0;"></td>
+          <td class="edit-mode" style="display:none;"><input type="text" name="time_info" value="<%= sch.time_info %>" style="margin-bottom:0;"></td>
+          <td>
+            <span class="<%= sch.is_active ? 'badge-active' : 'badge-inactive' %> display-mode"><%= sch.is_active ? 'Aktif' : 'Nonaktif' %></span>
+            <label class="toggle-switch edit-mode" style="display:none;">
+              <input type="checkbox" name="is_active" value="1" <%= sch.is_active ? 'checked' : '' %>><span>Aktif</span>
+            </label>
+          </td>
+          <td style="white-space:nowrap;display:flex;gap:0.4rem;align-items:center;">
+            <button type="button" class="btn-admin-outline edit-toggle" data-editing="0" style="padding:5px 12px;font-size:0.76rem;">Edit</button>
+            <button type="submit" class="btn-admin edit-mode" style="display:none;padding:5px 12px;font-size:0.76rem;">Simpan</button>
+          </td>
+        </form>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--gray-light);">
+    <p style="font-size:0.8rem;color:var(--gray);margin-bottom:0.75rem;">Hapus jadwal:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+      <% schedules.forEach(sch => { %>
+        <form action="/admin/schedules/delete/<%= sch.id %>" method="POST">
+          <button type="submit" class="btn-delete" onclick="return confirm('Hapus jadwal <%= sch.name %>?')"><%= sch.name %></button>
+        </form>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>

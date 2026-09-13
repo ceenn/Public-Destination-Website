@@ -1,0 +1,31 @@
+<%- include('../partials/admin-header', { pageTitle: 'Kelola Admin', activePage: 'admins' }) %>
+
+<div class="cms-card">
+  <div class="cms-card-title" style="justify-content:space-between;">
+    <span>Semua Admin (<%= admins.length %>)</span>
+    <a href="/admin/register" class="btn-admin" style="text-decoration:none;padding:8px 18px;font-size:0.82rem;">Tambah Admin</a>
+  </div>
+  <table class="cms-table">
+    <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Terdaftar</th><th>Status</th><th>Aksi</th></tr></thead>
+    <tbody>
+      <% admins.forEach((a, i) => { %>
+      <tr>
+        <td style="color:var(--gray);font-size:0.8rem;"><%= i+1 %></td>
+        <td><strong><%= a.username %></strong> <% if (a.id===admin.id) { %><span class="badge-active" style="margin-left:6px;">Anda</span><% } %></td>
+        <td style="color:var(--gray);"><%= a.email %></td>
+        <td style="color:var(--gray);font-size:0.8rem;"><%= new Date(a.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) %></td>
+        <td><span class="badge-active">Aktif</span></td>
+        <td>
+          <% if (a.id !== admin.id) { %>
+            <form action="/admin/admins/delete/<%= a.id %>" method="POST">
+              <button type="submit" class="btn-delete" onclick="return confirm('Hapus admin <%= a.username %>?')">Hapus</button>
+            </form>
+          <% } else { %><span style="color:#bbb;font-size:0.78rem;">—</span><% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/admin-footer') %>

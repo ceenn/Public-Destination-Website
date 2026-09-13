@@ -1,0 +1,31 @@
+<%- include('../partials/admin-header', { pageTitle: 'Dashboard', activePage: 'dashboard' }) %>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="num"><%= stats.imgs %></div><div class="lbl">Total Foto</div></div>
+  <div class="stat-card"><div class="num"><%= stats.schs %></div><div class="lbl">Jadwal Ibadah</div></div>
+  <div class="stat-card"><div class="num"><%= stats.facs %></div><div class="lbl">Fasilitas</div></div>
+  <div class="stat-card"><div class="num"><%= stats.adms %></div><div class="lbl">Total Admin</div></div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+
+  <% const cards = [
+    { href:'/admin/settings',    title:'Teks & Pengaturan',    desc:'Edit semua teks website: judul, deskripsi, kontak, jam operasional, aturan, footer, dan lainnya.' },
+    { href:'/admin/gallery',     title:'Galeri Foto',           desc:'Upload, edit, hapus foto fasilitas. Foto dikonversi otomatis ke WebP. Carousel berganti setiap hari.' },
+    { href:'/admin/schedules',   title:'Jadwal Ibadah',         desc:'Tambah, edit, hapus jadwal ibadah rutin yang tampil di halaman Beranda dan Tentang Kami.' },
+    { href:'/admin/facilities',  title:'Fasilitas',             desc:'Kelola daftar fasilitas yang tampil di halaman Fasilitas dan Tentang Kami.' },
+    { href:'/admin/history',     title:'Timeline Sejarah',      desc:'Edit entri timeline sejarah yang tampil di halaman Beranda dan Sejarah.' },
+    { href:'/admin/navigation',  title:'Menu Navigasi',         desc:'Edit link menu di navbar header — label, URL, target, dan tombol utama.' },
+  ]; %>
+
+  <% cards.forEach(card => { %>
+  <a href="<%= card.href %>" style="text-decoration:none;">
+    <div class="cms-card cms-dashboard-card">
+      <div class="cms-card-title"><%= card.title %></div>
+      <p style="font-size:0.84rem;color:var(--gray);margin:0;"><%= card.desc %></p>
+    </div>
+  </a>
+  <% }) %>
+</div>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,93 @@
+<%- include('../partials/admin-header', { pageTitle: 'Teks & Pengaturan', activePage: 'settings' }) %>
+
+<p style="font-size:0.88rem;color:var(--gray);margin-bottom:1.5rem;">Edit semua teks dan konten website di sini. Klik <strong>Simpan Perubahan</strong> setelah selesai.</p>
+
+<!-- Logo Upload Section -->
+<div class="cms-card" style="margin-bottom:1.5rem;">
+  <div class="settings-group-title">Logo Website</div>
+  <div class="logo-upload-section">
+    <% const logoSetting = Object.values(groups).flat().find(f => f.setting_key === 'site_logo'); %>
+    <% const currentLogo = logoSetting ? logoSetting.setting_value : ''; %>
+    <% if (currentLogo) { %>
+      <img src="/uploads/<%= currentLogo %>" alt="Logo saat ini" class="logo-preview">
+    <% } else { %>
+      <div class="logo-preview-placeholder">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="opacity:0.5;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Belum ada logo</span>
+      </div>
+    <% } %>
+    <div>
+      <p style="font-size:0.88rem;font-weight:600;color:var(--black);margin-bottom:0.4rem;">
+        <%= currentLogo ? 'Logo terpasang' : 'Belum ada logo' %>
+      </p>
+      <p style="font-size:0.8rem;color:var(--gray);margin-bottom:0.875rem;">
+        Format: PNG, JPG, SVG — disarankan ukuran 200×200 px atau lebih, transparan (PNG).<br>
+        Logo akan muncul di navbar, footer, dan halaman login admin.
+      </p>
+      <form action="/admin/settings/logo" method="POST" enctype="multipart/form-data" style="display:inline-flex;gap:0.5rem;flex-wrap:wrap;">
+        <input type="file" name="logo" id="logoFileInput" accept="image/*" required style="display:none;">
+        <button type="button" class="btn-admin" style="padding:8px 18px;font-size:0.82rem;" onclick="document.getElementById('logoFileInput').click()">
+          <%= currentLogo ? 'Ganti Logo' : 'Upload Logo' %>
+        </button>
+        <span id="logoFileName" style="font-size:0.8rem;color:var(--gray);align-self:center;"></span>
+        <button type="submit" id="logoSubmitBtn" class="btn-admin" style="padding:8px 18px;font-size:0.82rem;display:none;">Simpan Logo</button>
+      </form>
+      <% if (currentLogo) { %>
+      <form action="/admin/settings/logo/delete" method="POST" style="display:inline;margin-left:0.5rem;">
+        <button type="submit" class="btn-delete" style="padding:7px 14px;font-size:0.8rem;" onclick="return confirm('Hapus logo ini?')">Hapus Logo</button>
+      </form>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('logoFileInput')?.addEventListener('change', function() {
+  const name = this.files[0]?.name || '';
+  document.getElementById('logoFileName').textContent = name;
+  document.getElementById('logoSubmitBtn').style.display = name ? 'inline-block' : 'none';
+});
+</script>
+
+<form action="/admin/settings" method="POST">
+<% const groupLabels = {
+  general: 'Umum & Identitas Website',
+  hero:    'Hero / Banner Utama',
+  pesan:   'Pesan Utama',
+  contact: 'Kontak & Media Sosial',
+  hours:   'Jam Operasional',
+  rules:   'Aturan Berkunjung',
+  about:   'Tentang Kami',
+  sejarah: 'Sejarah',
+  footer:  'Footer'
+}; %>
+
+<% Object.entries(groups).forEach(([groupKey, fields]) => { %>
+<div class="cms-card">
+  <div class="settings-group-title"><%= groupLabels[groupKey] || groupKey %></div>
+  <% fields.forEach(f => { %>
+  <div class="settings-row">
+    <div class="settings-label">
+      <%= f.label || f.setting_key %>
+      <small><code style="font-size:0.68rem;background:#f0f0ee;padding:1px 4px;border-radius:3px;"><%= f.setting_key %></code></small>
+    </div>
+    <div>
+      <% if (f.type === 'textarea' || f.type === 'richtext') { %>
+        <textarea name="<%= f.setting_key %>" rows="3"><%= f.setting_value || '' %></textarea>
+      <% } else { %>
+        <input type="text" name="<%= f.setting_key %>" value="<%= f.setting_value || '' %>">
+      <% } %>
+    </div>
+  </div>
+  <% }) %>
+</div>
+<% }) %>
+
+<div style="position:sticky;bottom:1.5rem;z-index:50;text-align:right;pointer-events:none;">
+  <button type="submit" class="btn-admin" style="pointer-events:all;padding:14px 32px;font-size:0.95rem;box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+    Simpan Perubahan
+  </button>
+</div>
+</form>
+
+<%- include('../partials/admin-footer') %>

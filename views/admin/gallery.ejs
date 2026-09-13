@@ -1,0 +1,66 @@
+<%- include('../partials/admin-header', { pageTitle: 'Galeri Foto', activePage: 'gallery' }) %>
+
+<div class="cms-card">
+  <div class="cms-card-title">Upload Foto Baru</div>
+  <form action="/admin/gallery/upload" method="POST" enctype="multipart/form-data">
+    <div class="upload-zone" style="margin-bottom:1.25rem;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" style="display:block;margin:0 auto 0.75rem;opacity:0.5;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p id="fileLabel" style="color:#666;font-size:0.85rem;font-weight:500;">Klik atau seret gambar ke sini</p>
+      <p style="color:#aaa;font-size:0.75rem;margin-top:0.3rem;">JPG, PNG, WebP — maks. 8 MB — dikonversi otomatis ke WebP</p>
+      <input type="file" id="imageInput" name="image" accept="image/*" required style="display:none;">
+    </div>
+    <div class="inline-grid" style="margin-bottom:0.75rem;">
+      <div>
+        <label class="form-label">Keterangan Foto</label>
+        <input type="text" name="caption" placeholder="Contoh: Goa Doa No. 3" style="margin-bottom:0;">
+      </div>
+      <div>
+        <label class="form-label">Kategori</label>
+        <select name="category" style="margin-bottom:0;">
+          <option>Fasilitas</option><option>Goa Doa</option><option>Penginapan</option>
+          <option>Gedung Ibadah</option><option>Toko Buku</option><option>Lingkungan</option><option>Kegiatan</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn-admin">Upload Foto</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title" style="justify-content:space-between;">
+    <span>Semua Foto (<%= images.length %>)</span>
+    <span style="font-size:0.72rem;color:var(--gray);font-weight:400;background:var(--gray-light);padding:3px 10px;border-radius:100px;">Rotasi harian aktif</span>
+  </div>
+
+  <% if (images.length > 0) { %>
+  <div class="img-grid-cms">
+    <% images.forEach(img => { %>
+    <div class="img-cms-item">
+      <div class="img-sort-handle">Geser untuk urutkan</div>
+      <img src="/uploads/<%= img.filename %>" alt="<%= img.caption %>" loading="lazy">
+      <div class="img-cms-meta">
+        <form action="/admin/gallery/update/<%= img.id %>" method="POST">
+          <input type="text" name="caption" value="<%= img.caption %>" placeholder="Keterangan" style="margin-bottom:0.35rem;">
+          <select name="category" style="margin-bottom:0.5rem;">
+            <% ['Fasilitas','Goa Doa','Penginapan','Gedung Ibadah','Toko Buku','Lingkungan','Kegiatan'].forEach(cat => { %>
+              <option value="<%= cat %>" <%= img.category===cat?'selected':'' %>><%= cat %></option>
+            <% }) %>
+          </select>
+          <button type="submit" class="btn-admin" style="width:100%;padding:6px;font-size:0.78rem;margin-bottom:0.3rem;">Simpan</button>
+        </form>
+        <form action="/admin/gallery/delete/<%= img.id %>" method="POST">
+          <button type="submit" class="btn-delete" style="width:100%;padding:6px;" onclick="return confirm('Hapus foto ini?')">Hapus</button>
+        </form>
+        <% if (img.uploader) { %><p style="font-size:0.65rem;color:#aaa;margin-top:0.3rem;text-align:center;">oleh: <%= img.uploader %></p><% } %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } else { %>
+  <div style="text-align:center;padding:3rem;color:var(--gray);">
+    <p>Belum ada foto. Upload foto di atas.</p>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,61 @@
+<%- include('partials/header', { title: 'Fasilitas - ' + s.site_name }) %>
+<div style="margin-top:72px;">
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <p class="section-label">Tempat & Fasilitas</p>
+      <h1 class="page-title">Fasilitas Kami</h1>
+    </div>
+  </div>
+
+  <section class="section" style="padding-bottom:2rem;">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;" class="fade-up">
+        <p style="font-size:1.02rem;color:var(--gray);line-height:1.9;max-width:640px;"><%= s.site_name %> menyediakan berbagai fasilitas untuk mendukung kegiatan doa, persekutuan, ibadah, dan retreat rohani.</p>
+        <a href="/reservasi" class="btn-primary" style="white-space:nowrap;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Buat Reservasi
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:4rem;">
+    <div class="container">
+      <% if (images && images.length > 0) { %>
+        <div class="facilities-grid">
+          <% images.forEach(img => { %>
+          <div class="facility-card fade-up">
+            <img src="/uploads/<%= img.filename %>" alt="<%= img.caption %>" loading="lazy">
+            <div class="facility-card-overlay">
+              <p class="facility-card-cat"><%= img.category %></p>
+              <p class="facility-card-caption"><%= img.caption || s.site_name %></p>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state fade-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <h3 style="margin-bottom:0.5rem;">Belum ada foto</h3>
+          <p>Foto fasilitas akan segera ditambahkan.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--gray-light);padding-top:4rem;">
+    <div class="container">
+      <div class="section-header fade-up"><p class="section-label">Yang Tersedia</p><h2>Daftar Fasilitas</h2></div>
+      <div class="info-grid">
+        <% facilities.forEach(fac => { %>
+        <div class="info-card fade-up">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+          <h3><%= fac.title %></h3>
+          <p><%= fac.description %></p>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,42 @@
+<%- include('../partials/admin-header', { pageTitle: 'Timeline Sejarah', activePage: 'history' }) %>
+
+<div class="add-form">
+  <div class="add-form-title">Tambah Entri Sejarah</div>
+  <form action="/admin/history/add" method="POST">
+    <div class="inline-grid">
+      <input type="text" name="year_label" placeholder="Tahun atau label (contoh: 1985)" required>
+      <input type="text" name="title" placeholder="Judul singkat" required>
+    </div>
+    <textarea name="content" placeholder="Cerita lengkap..." rows="3" required></textarea>
+    <button type="submit" class="btn-admin">Tambah ke Timeline</button>
+  </form>
+</div>
+
+<div class="cms-card">
+  <div class="cms-card-title">Timeline Sejarah (<%= history.length %>)</div>
+  <% history.forEach(h => { %>
+  <div data-id="<%= h.id %>" style="border:1px solid var(--gray-light);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:0.75rem;">
+    <form action="/admin/history/update/<%= h.id %>" method="POST">
+      <div class="display-mode">
+        <span style="font-weight:800;color:var(--gold);font-size:1.1rem;"><%= h.year_label %></span>
+        <strong style="margin-left:8px;"><%= h.title %></strong>
+        <p style="font-size:0.85rem;color:var(--gray);margin-top:0.4rem;"><%= h.content %></p>
+      </div>
+      <div class="edit-mode" style="display:none;">
+        <div class="inline-grid" style="margin-bottom:0.5rem;">
+          <input type="text" name="year_label" value="<%= h.year_label %>" style="margin-bottom:0;">
+          <input type="text" name="title" value="<%= h.title %>" style="margin-bottom:0;">
+        </div>
+        <textarea name="content" rows="3" style="margin-bottom:0.5rem;"><%= h.content %></textarea>
+        <button type="submit" class="btn-admin" style="padding:6px 16px;font-size:0.78rem;">Simpan</button>
+      </div>
+      <button type="button" class="btn-admin-outline edit-toggle" data-editing="0" style="padding:5px 12px;font-size:0.76rem;margin-top:0.5rem;">Edit</button>
+    </form>
+    <form action="/admin/history/delete/<%= h.id %>" method="POST" style="display:inline;margin-left:0.5rem;">
+      <button type="submit" class="btn-delete" onclick="return confirm('Hapus entri <%= h.year_label %>?')">Hapus</button>
+    </form>
+  </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/admin-footer') %>

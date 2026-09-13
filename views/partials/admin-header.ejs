@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle || 'Admin' %> — CMS Bukit Doa Getsemani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="margin:0;padding:0;">
+<div style="display:flex;width:100%;min-height:100vh;">
+
+  <aside class="cms-sidebar" id="cmsSidebar">
+    <div class="cms-sidebar-brand">
+      <div class="cms-sidebar-logo">
+        <% if (typeof siteLogo !== 'undefined' && siteLogo) { %>
+          <img src="/uploads/<%= siteLogo %>" alt="Logo">
+        <% } else { %>
+          <span>CMS</span>
+        <% } %>
+      </div>
+      <div>
+        <span>Panel Admin</span>
+        <small>Bukit Doa Getsemani</small>
+      </div>
+    </div>
+
+    <nav class="cms-nav">
+      <div class="cms-nav-group">Umum</div>
+      <a href="/admin" class="cms-nav-item <%= activePage==='dashboard'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+
+      <div class="cms-nav-group">Konten Website</div>
+      <a href="/admin/settings" class="cms-nav-item <%= activePage==='settings'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.622 10.395l-1.097-2.65L20 6l-2-2-1.735 1.483-2.707-1.113L12.935 2h-1.954l-.632 2.401-2.645 1.115L6 4 4 6l1.453 1.789-1.08 2.657L2 11v2l2.401.655L5.516 16.3 4 18l2 2 1.791-1.46 2.606 1.072L11 22h2l.604-2.387 2.651-1.098C16.697 19.388 18 20 18 20l2-2-1.484-1.789 1.098-2.652 2.386-.58V11l-2.378-.605z"/></svg>
+        Teks & Pengaturan
+      </a>
+      <a href="/admin/gallery" class="cms-nav-item <%= activePage==='gallery'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Galeri Foto
+      </a>
+      <a href="/admin/schedules" class="cms-nav-item <%= activePage==='schedules'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Jadwal Ibadah
+      </a>
+      <a href="/admin/facilities" class="cms-nav-item <%= activePage==='facilities'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Fasilitas
+      </a>
+      <a href="/admin/history" class="cms-nav-item <%= activePage==='history'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Timeline Sejarah
+      </a>
+      <a href="/admin/access" class="cms-nav-item <%= activePage==='access'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        Info Akses & Lokasi
+      </a>
+      <a href="/admin/navigation" class="cms-nav-item <%= activePage==='navigation'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        Menu Navigasi
+      </a>
+
+      <div class="cms-nav-group">Manajemen</div>
+      <a href="/admin/reservasi" class="cms-nav-item <%= activePage==='reservasi'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+        Reservasi
+      </a>
+      <a href="/admin/admins" class="cms-nav-item <%= activePage==='admins'?'active':'' %>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Kelola Admin
+      </a>
+      <a href="/admin/register" class="cms-nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        Tambah Admin
+      </a>
+    </nav>
+
+    <div class="cms-sidebar-footer">
+      <a href="/" target="_blank">Lihat Website</a>
+      <a href="/admin/logout">Logout &nbsp;(<%= admin.username %>)</a>
+    </div>
+  </aside>
+
+  <main class="cms-main">
+    <div class="cms-topbar">
+      <h1><%= pageTitle || 'Dashboard' %></h1>
+      <div class="cms-topbar-right">
+        <% if (typeof flash !== 'undefined' && flash) { %>
+          <span class="flash <%= flash.type %>" style="margin:0;padding:6px 14px;"><%= flash.msg %></span>
+        <% } %>
+        <span class="cms-user-badge"><%= admin.username %></span>
+      </div>
+    </div>
+    <div class="cms-body">

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin — Bukit Doa Getsemani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-wrap">
+
+    <div style="text-align:center;margin-bottom:2rem;">
+      <% if (typeof siteLogo !== 'undefined' && siteLogo) { %>
+        <img src="/uploads/<%= siteLogo %>" alt="Logo" style="height:64px;width:auto;object-fit:contain;margin:0 auto;display:block;">
+      <% } else { %>
+        <div class="auth-logo-placeholder"><span>Logo</span></div>
+      <% } %>
+      <p style="color:rgba(255,255,255,0.3);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;margin-top:0.75rem;font-weight:600;">
+        Bukit Doa Getsemani
+      </p>
+    </div>
+
+    <div class="auth-card">
+      <h2>Panel Admin</h2>
+      <p class="sub">
+        <% if (noAdmin) { %>
+          Belum ada admin terdaftar. Buat akun pertama Anda.
+        <% } else { %>
+          Masuk menggunakan username atau email.
+        <% } %>
+      </p>
+      <div class="auth-divider"></div>
+
+      <% if (noAdmin) { %>
+      <div class="auth-notice">
+        <p><strong>Belum ada admin terdaftar.</strong> Daftarkan akun admin pertama untuk mulai mengelola website.</p>
+        <a href="/admin/register" class="auth-notice-btn">Buat Akun Admin Pertama</a>
+      </div>
+      <div class="auth-or">atau masuk jika sudah punya akun</div>
+      <% } %>
+
+      <% if (typeof flash !== 'undefined' && flash && flash.type === 'error') { %>
+        <div class="auth-error"><%= flash.msg %></div>
+      <% } %>
+      <% if (error) { %><div class="auth-error"><%= error %></div><% } %>
+
+      <form action="/admin/login" method="POST">
+        <label class="form-label" for="identifier">Username atau Email</label>
+        <input type="text" id="identifier" name="identifier"
+               placeholder="username / email@domain.com"
+               required autofocus autocomplete="username">
+
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Masukkan password" required autocomplete="current-password">
+
+        <button type="submit" class="btn-admin" style="width:100%;padding:13px;margin-top:0.5rem;font-size:0.92rem;">
+          Masuk ke Panel Admin
+        </button>
+      </form>
+
+      <% if (!noAdmin) { %>
+      <div style="text-align:center;margin-top:1.25rem;font-size:0.8rem;color:rgba(255,255,255,0.3);">
+        Admin baru?
+        <a href="/admin/register" style="color:var(--gold);text-decoration:none;font-weight:600;">Daftar di sini</a>
+        <span style="margin:0 0.4rem;color:rgba(255,255,255,0.15);">·</span>
+        <span style="font-size:0.75rem;">Perlu izin admin aktif</span>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="auth-link" style="margin-top:1rem;"><a href="/">Kembali ke Website</a></div>
+  </div>
+</div>
+</body>
+</html>
